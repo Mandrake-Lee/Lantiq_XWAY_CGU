@@ -13,9 +13,20 @@ XWAY family spans for: Danube, ASE, GRX300, XRX200/VR9
 
 ## Physical layout
 This chapter is a huge guess so please take info with care.
-### VR9
-#### Oscillator
-Analysing [4](#References), it seems that there can be the following oscillators:
+### Oscillator
+#### Danube, Amazon
+Analysing [[3]](#References):
+* 36 MHz
+* 35 MHz
+
+### AR9
+Analysing U-Boot patches:
+* 36 MHz
+* 35 MHz
+* 25 MHz
+
+#### VR9
+Analysing [[4]](#References):
 * 36 MHz (default)
 * 6 Mz (changed to 36MHz via CPLD)
 * 25 MHz - only for GRX255
@@ -59,31 +70,30 @@ This is the register layout as far as we know. See [[1]](#References) & [[5]](#R
 
 ## Memory layout
 
+### DANUBE, AMAZON, AR9
+Based on [[3]](#References):
 
-### DANUBE
-Based on [[4]](#References):
-
-|0x1f103000?|0x04|0x08|0x0c|0x0f|
+|0xbf103000|0x00|0x04|0x08|0x0c|
 |---|---|---|---|---|
-|0x10|CGU_DIV|PLL_NMK0|PLL_SR0|PLL_NMK1|
-|0x20|PLL_SR1|PLL_SR2|CGU_IF_CLK|CGU_OS_CTRL|
-|0x30|CGU_SMD|CGU_CRD|CGU_CT1SR|CGU_CT2SR|
-|0x40|CGU_PCMR|CGU_MUX|||
+|0x00|CGU_BASE|PLL0_CFG|PLL1_CFG|PLL2_CFG|
+|0x10|CGU_SYS|CGU_UPDATE|IF_CLK|CGU_OSC_CTRL |
+|0x20|CGU_SMD||CGU_CT1SR|CGU_CT2SR|
+|0x30|CGU_PCMCR|PCI_CR|CGU_MIPS_PWR_DWN |CLK_MEASURE|
 
 
 
 ### VR9
 Based on cgu.c and cgu_init.S [[1]](#References) we can see the following information:
 
-|0xbf103000|0x04|0x08|0x0c|0x0f|
+|0xbf103000|0x00|0x04|0x08|0x0c|
 |---|---|---|---|---|
-|0x10|CGU_BASE|PLL0_CFG|PLL1_CFG|CGU_SYS|
-|0x20|CGU_CLKFSR|CGU_CLKGSR|CGU_CLKGCR0|CGU_CLKGCR1|
-|0x30|CGU_UPDATE|IF_CLK|CGU_DDR|CGU_CT1SR|
-|0x40|CGU_CT_KVAL|CGU_PCMCR|PCI_CR|reserved1|
-|0x50|GPHY1_CFG|GPHY0_CFG|reserved|reserved|
-|0x60|reserved|reserved|reserved|reserved|
-|0x70|PLL2_CFG| | | |
+|0x00|CGU_BASE|PLL0_CFG|PLL1_CFG|CGU_SYS|
+|0x10|CGU_CLKFSR|CGU_CLKGSR|CGU_CLKGCR0|CGU_CLKGCR1|
+|0x20|CGU_UPDATE|IF_CLK|CGU_DDR|CGU_CT1SR|
+|0x30|CGU_CT_KVAL|CGU_PCMCR|PCI_CR|reserved1|
+|0x40|GPHY1_CFG|GPHY0_CFG|reserved|reserved|
+|0x50|reserved|reserved|reserved|reserved|
+|0x60|PLL2_CFG| | | |
 
 * CGU_BASE
 * PLL0_CFG. PPL0 configuration register
@@ -102,14 +112,26 @@ Based on cgu.c and cgu_init.S [[1]](#References) we can see the following inform
 * PCI_CR. PCI control. Valid rates 60M, 83M, 111M, 133M, 167M, 333M (in Hz).
 * GPHY1_CFG
 * GPHY0_CFG
-* PLL2_CFG. (is this address 0x60)?
+* PLL2_CFG
+
+### AR10
+Based on cgu.c and cgu_init.S [[1]](#References) we can see the following information:
+
+|0xbf103000|0x00|0x04|0x08|0x0c|
+|---|---|---|---|---|
+|0x00|CGU_BASE|PLL0_CFG|PLL1_CFG|CGU_SYS|
+|0x10|CGU_CLKFSR|CGU_CLKGSR|CGU_CLKGCR0|CGU_CLKGCR1|
+|0x20|CGU_UPDATE|IF_CLK||CGU_CT1SR|
+|0x30|CGU_CT_KVAL|CGU_PCMCR|||
+|0x40|EPHY1_CFG|EPHY2_CFG|EPHY0_CFG||
 
 # References
-[1] U-Boot sources Daniel Schwierzeck(https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200)
+[1] [U-Boot sources Daniel Schwierzeck](https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200)
 
 [2] U-Boot UGW6.1 sources. File *vr9.h*
 
-[3] [U-Boot sources IFXMIPS](https://github.com/zioproto/SDK.UBNT.v5.3.3/blob/master/package/uboot-ifxmips/files/cpu/mips/danube/ifx_cgu.c)
+[3] [U-Boot IFX patches Danube](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/501-board-danube.patch)
 
-[4] [U-boot IFX patches](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/504-board-vr9.patch)
+[4] [U-boot IFX patches VR9](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/504-board-vr9.patch)
+
 [5] [clk-xway.c](https://github.com/Cl3Kener/UBER-M/blob/master/arch/mips/lantiq/xway/clk-xway.c) 
