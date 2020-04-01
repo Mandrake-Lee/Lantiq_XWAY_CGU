@@ -48,11 +48,12 @@ Based on cgu.c and cgu_init.S [[1]](#References) we can see the following inform
 * CGU_CT1SR. Counter1 status?
 * CGU_CT_KVAL. Couter1 K-value
 * CGU_PCMCR. PCM control
-* PCI_CR. PCI control
+* PCI_CR. PCI control. Valid rates 60M, 83M, 111M, 133M, 167M, 333M (in Hz).
 * GPHY1_CFG
 * GPHY0_CFG
 * PLL2_CFG. (is this address 0x60)?
 
 # References
-[1] [U-Boot sources] (https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200)
-[2] [U-Boot UGW6.1 sources] vr9.h
+[1] U-Boot sources Daniel Schwierzeck(https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200)
+[2] U-Boot UGW6.1 sources. File *vr9.h*
+[3] [U-Boot sources IFXMIPS](https://github.com/zioproto/SDK.UBNT.v5.3.3/blob/master/package/uboot-ifxmips/files/cpu/mips/danube/ifx_cgu.c) 
