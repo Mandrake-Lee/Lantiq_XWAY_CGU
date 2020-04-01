@@ -24,7 +24,7 @@ Analysing [[3]](#References):
 * 35 MHz
 * 25 MHz
 
-#### VR9
+#### VR9, AR10 (possibly)
 * 36 MHz (default)
 * 6 Mz (changed to 36MHz via CPLD)
 * 25 MHz - only for GRX255
