@@ -21,28 +21,60 @@ Analysing [4](#References), it seems that there can be the following oscillators
 * 25 MHz - only for GRX255
 ### PLL's
 There are 3 PPL's in the board. However they are not exactly identical most probably because they don't feed to the same items.
-This is the register layout as far as we know.
+This is the register layout as far as we know. See [[1]](#References) & [[5]](#References):
 |BIT|PLL0|PLL1|PLL2|
 |---|---|---|---|
-|0|RESET|||
-|1|RESET|||
-|2|RESET|||
-|3|RESET|||
-|4|RESET|||
-|5|RESET|||
-|6|RESET|||
-|7|RESET|||
-|8|RESET|||
-|20|||PHASE_DIVIDER|
+|0|ENABLE|ENABLE||
+|1|LOCKED|LOCKED||
+|2|CGF_PLLM|CGF_PLLM||
+|3|CGF_PLLM|CGF_PLLM||
+|4|CGF_PLLM|CGF_PLLM||
+|5|CGF_PLLM|CGF_PLLM||
+|6|CFG_PLLN|CFG_PLLN||
+|7|CFG_PLLN|CFG_PLLN||
+|8|CFG_PLLN|CFG_PLLN||
+|9|CFG_PLLN|CFG_PLLN||
+|10|CFG_PLLN|CFG_PLLN||
+|11|CFG_PLLN|CFG_PLLN||
+|12||||
+|13|||CFG_INPUT_DIV|
+|14|||CFG_INPUT_DIV|
+|15|||CFG_INPUT_DIV|
+|16|||CFG_INPUT_DIV|
+|17|CFG_PLLK|CFG_PLLK?|SRC|
+|18|CFG_PLLK|CFG_PLLK?|SRC|
+|19|CFG_PLLK|CFG_PLLK?||
+|20|CFG_PLLK|CFG_PLLK?|PHASE_DIVIDER|
+|21|CFG_PLLK|CFG_PLLK?||
+|22|CFG_PLLK|CFG_PLLK?||
+|23|CFG_PLLK|CFG_PLLK?||
+|24|CFG_PLLK|CFG_PLLK?||
+|25|CFG_PLLK|CFG_PLLK?||
+|26|CFG_PLLK|CFG_PLLK?||
 |27|CFG_FRAC|||
 |28|CFG_DSMSEL|||
+|29|SRC|||
 |30|BYPASS|||
-|31|PHASE_DIVIDER|||
+|31|PHASE_DIVIDER|SRC||
 
 ## Memory layout
-Based on cgu.c and cgu_init.S [[1]](#References) we can see the following information:
+
+
+### DANUBE
+Based on [[4]](#References):
+
+|0x1f103000?|0x04|0x08|0x0c|0x0f|
+|---|---|---|---|---|
+|0x10|CGU_DIV|PLL_NMK0|PLL_SR0|PLL_NMK1|
+|0x20|PLL_SR1|PLL_SR2|CGU_IF_CLK|CGU_OS_CTRL|
+|0x30|CGU_SMD|CGU_CRD|CGU_CT1SR|CGU_CT2SR|
+|0x40|CGU_PCMR|CGU_MUX|||
+
+
 
 ### VR9
+Based on cgu.c and cgu_init.S [[1]](#References) we can see the following information:
+
 |0xbf103000|0x04|0x08|0x0c|0x0f|
 |---|---|---|---|---|
 |0x10|CGU_BASE|PLL0_CFG|PLL1_CFG|CGU_SYS|
@@ -80,3 +112,4 @@ Based on cgu.c and cgu_init.S [[1]](#References) we can see the following inform
 [3] [U-Boot sources IFXMIPS](https://github.com/zioproto/SDK.UBNT.v5.3.3/blob/master/package/uboot-ifxmips/files/cpu/mips/danube/ifx_cgu.c)
 
 [4] [U-boot IFX patches](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/504-board-vr9.patch)
+[5] [clk-xway.c](https://github.com/Cl3Kener/UBER-M/blob/master/arch/mips/lantiq/xway/clk-xway.c) 
