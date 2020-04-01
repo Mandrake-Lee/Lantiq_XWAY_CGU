@@ -1,5 +1,4 @@
-# Lantiq_XWAY_CGU
-Purpose is to document the findings on the Lantiq XWAY CGU as per the scattered sources available.
+# Lantiq XWAY CGU
 
 ## Introduction
 Lantiq/Intel hasn't released the datasheet for his family of XWAY Soc's, hence every effort to port to modern Linux some especific features is always based in guesses and inverse engineering of the leftovers of code.
@@ -9,24 +8,23 @@ Lantiq/Intel hasn't released the datasheet for his family of XWAY Soc's, hence e
 The purpose of this repository is to document the findings in the scattered sources available.
 
 ## Applicability
-XWAY family spans for: Danube, ASE, GRX300, XRX200/VR9
+XWAY family spans for: Danube, Amazon, AR9, VR9/XRX200 GRX300
 
 ## Physical layout
 This chapter is a huge guess so please take info with care.
 ### Oscillator
-#### Danube, Amazon
 Analysing [[3]](#References):
+
+#### Danube, Amazon
 * 36 MHz
 * 35 MHz
 
-### AR9
-Analysing U-Boot patches:
+#### AR9
 * 36 MHz
 * 35 MHz
 * 25 MHz
 
 #### VR9
-Analysing [[4]](#References):
 * 36 MHz (default)
 * 6 Mz (changed to 36MHz via CPLD)
 * 25 MHz - only for GRX255
@@ -69,9 +67,9 @@ This is the register layout as far as we know. See [[1]](#References) & [[5]](#R
 |31|PHASE_DIVIDER|SRC||
 
 ## Memory layout
+Based on [[3]](#References):
 
 ### DANUBE, AMAZON, AR9
-Based on [[3]](#References):
 
 |0xbf103000|0x00|0x04|0x08|0x0c|
 |---|---|---|---|---|
@@ -80,10 +78,7 @@ Based on [[3]](#References):
 |0x20|CGU_SMD||CGU_CT1SR|CGU_CT2SR|
 |0x30|CGU_PCMCR|PCI_CR|CGU_MIPS_PWR_DWN |CLK_MEASURE|
 
-
-
 ### VR9
-Based on cgu.c and cgu_init.S [[1]](#References) we can see the following information:
 
 |0xbf103000|0x00|0x04|0x08|0x0c|
 |---|---|---|---|---|
@@ -115,7 +110,6 @@ Based on cgu.c and cgu_init.S [[1]](#References) we can see the following inform
 * PLL2_CFG
 
 ### AR10
-Based on cgu.c and cgu_init.S [[1]](#References) we can see the following information:
 
 |0xbf103000|0x00|0x04|0x08|0x0c|
 |---|---|---|---|---|
@@ -126,12 +120,10 @@ Based on cgu.c and cgu_init.S [[1]](#References) we can see the following inform
 |0x40|EPHY1_CFG|EPHY2_CFG|EPHY0_CFG||
 
 # References
-[1] [U-Boot sources Daniel Schwierzeck](https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200)
+[1] [U-Boot sources Daniel Schwierzeck](https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200) Files *cgu.c, cgu_init.S*
 
 [2] U-Boot UGW6.1 sources. File *vr9.h*
 
-[3] [U-Boot IFX patches Danube](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/501-board-danube.patch)
+[3] [U-Boot IFX board patches](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/)
 
-[4] [U-boot IFX patches VR9](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/504-board-vr9.patch)
-
-[5] [clk-xway.c](https://github.com/Cl3Kener/UBER-M/blob/master/arch/mips/lantiq/xway/clk-xway.c) 
+[4] [clk-xway.c](https://github.com/Cl3Kener/UBER-M/blob/master/arch/mips/lantiq/xway/clk-xway.c) 
