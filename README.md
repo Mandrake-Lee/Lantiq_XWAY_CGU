@@ -15,10 +15,29 @@ XWAY family spans for: Danube, ASE, GRX300, XRX200/VR9
 This chapter is a huge guess so please take info with care.
 ### VR9
 #### Oscillator
-Studying to [1](#References), it seems that there can be the following oscillators:
+Analysing [4](#References), it seems that there can be the following oscillators:
 * 36 MHz (default)
-* 35.328 MHz
-
+* 6 Mz (changed to 36MHz via CPLD)
+* 25 MHz - only for GRX255
+### PLL's
+There are 3 PPL's in the board. However they are not exactly identical most probably because they don't feed to the same items.
+This is the register layout as far as we know.
+|BIT|PLL0|PLL1|PLL2|
+|---|---|---|---|
+|0|RESET|||
+|1|RESET|||
+|2|RESET|||
+|3|RESET|||
+|4|RESET|||
+|5|RESET|||
+|6|RESET|||
+|7|RESET|||
+|8|RESET|||
+|20|||PHASE_DIVIDER|
+|27|CFG_FRAC|||
+|28|CFG_DSMSEL|||
+|30|BYPASS|||
+|31|PHASE_DIVIDER|||
 
 ## Memory layout
 Based on cgu.c and cgu_init.S [[1]](#References) we can see the following information:
@@ -56,4 +75,5 @@ Based on cgu.c and cgu_init.S [[1]](#References) we can see the following inform
 # References
 [1] U-Boot sources Daniel Schwierzeck(https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200)
 [2] U-Boot UGW6.1 sources. File *vr9.h*
-[3] [U-Boot sources IFXMIPS](https://github.com/zioproto/SDK.UBNT.v5.3.3/blob/master/package/uboot-ifxmips/files/cpu/mips/danube/ifx_cgu.c) 
+[3] [U-Boot sources IFXMIPS](https://github.com/zioproto/SDK.UBNT.v5.3.3/blob/master/package/uboot-ifxmips/files/cpu/mips/danube/ifx_cgu.c)
+[4] [U-boot IFX patches](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/504-board-vr9.patch)
