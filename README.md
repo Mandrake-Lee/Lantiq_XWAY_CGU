@@ -41,8 +41,8 @@ There are 3 PPL's in the board. However they are not exactly identical most prob
 This is the register layout as far as we know. See [[1]](#References) & [[5]](#References):
 |BIT|PLL0|PLL1|PLL2|
 |---|---|---|---|
-|0|ENABLE|ENABLE|DDR_SEL?|
-|1|LOCKED|LOCKED|DDR_SEL?|
+|0|ENABLE|ENABLE|DDR_SEL|
+|1|LOCKED|LOCKED|DDR_SEL|
 |2|CGF_PLLM|CGF_PLLM||
 |3|CGF_PLLM|CGF_PLLM||
 |4|CGF_PLLM|CGF_PLLM||
