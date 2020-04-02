@@ -12,6 +12,10 @@ XWAY family spans for: Danube, Amazon, AR9, VR9/XRX200 GRX300
 
 ## Physical layout
 This chapter is a huge guess so please take info with care.
+
+### Schematic
+![Schematic draft](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_shematic_draft_20200420.PNG)
+
 ### Oscillator
 Analysing [[3]](#References):
 
@@ -30,6 +34,10 @@ Analysing [[3]](#References):
 * 25 MHz - only for GRX255
 ### PLL's
 There are 3 PPL's in the board. However they are not exactly identical most probably because they don't feed to the same items.
+* PLL0 seems to be the master
+* PLL1 seems to be the brother
+* PLL2 seems to be the auxilliary or little brother. The register information differs from PLL0 and PLL1. Also it seems it contains a divider in addition to a PLL circuitry.
+
 This is the register layout as far as we know. See [[1]](#References) & [[5]](#References):
 |BIT|PLL0|PLL1|PLL2|
 |---|---|---|---|
