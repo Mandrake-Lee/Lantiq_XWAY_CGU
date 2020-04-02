@@ -17,11 +17,11 @@ Analysing [[3]](#References):
 
 #### Danube, Amazon
 * 36 MHz
-* 35 MHz
+* 35.328 MHz
 
 #### AR9
 * 36 MHz
-* 35 MHz
+* 35.328 MHz
 * 25 MHz
 
 #### VR9, AR10 (possibly)
@@ -68,6 +68,12 @@ This is the register layout as far as we know. See [[1]](#References) & [[5]](#R
 
 * BYPASS. If enable, the PLL will output the oscillator/input frequency
 * DDR_SEL. It's a divider from PLL0 to DDR/FPI/IO bus
+* SRC:
+  * For PPL0 & PLL1, if enable, freq_in will be the one of the USB bus i.e 12MHz
+  * For PPL2, this property is always active with following choices:
+    * 0 : PPL2_freq_in = PPL0_freq_out affected by PLL2 divider
+    * 1 : PPL2_freq_in depends on the PHASE_DIVIDER; either 36MHz or 35.328MHz
+    * 2 : PPL2_freq_in is the same as USB bus, i.e. 12MHz
 
 ## Memory layout
 Based on [[3]](#References):
