@@ -14,7 +14,8 @@ XWAY family spans for: Danube, Amazon, AR9, VR9/XRX200 GRX300
 This chapter is a huge guess so please take info with care.
 
 ### Schematic
-![Schematic draft](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_shematic_draft_20200420.PNG)
+Be aware this is a wip. Many assumptions taken.
+![Schematic draft](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_shematic_draft_20200403.PNG)
 
 ### Oscillator
 Analysing [[3]](#References):
