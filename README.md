@@ -111,13 +111,18 @@ Based on [[3]](#References):
 * PLL0_CFG. PPL0 configuration register
 * PLL1_CFG. PPL1 configuration register
 * CGU_SYS. Most read/write operations are done via this register. The structure is as follows:
-
-
-|BYTES|5-8|1-4|
-|---|---|---|
-|AREA|MASTER|SHADOW|
-|OPERATION|WRITE|READ|
+ 
+ |BYTES|5-8|1-4|
+ |---|---|---|
+ |AREA|MASTER|SHADOW|
+ |OPERATION|WRITE|READ|
 * CGU_CLKFSR. Frequency selector
+ 
+ |BYTES|7-8|5-6|3-4|1-2|
+ |---|---|---|---|---|
+ |CONTROL|ETH|ETH|PPE|PPE|
+ |AREA|MASTER|SHADOW|MASTER|SHADOW|
+ |OPERATION|WRITE|READ|WRITE|READ|
 * CGU_CLKGSR. Gate status
 * CGU_CLKGCR0. Gate control 0
 * CGU_CLKGCR0. Gate control 1
