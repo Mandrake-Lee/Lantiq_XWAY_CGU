@@ -15,7 +15,7 @@ This chapter is a huge guess so please take info with care.
 
 ### Schematic
 Be aware this is a wip. Many assumptions taken.
-![Schematic draft](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_shematic_draft_20200403.PNG)
+![Schematic draft](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_shematic_draft_20200405.PNG)
 
 ### Oscillator
 Analysing [[3]](#References):
@@ -34,16 +34,29 @@ Analysing [[3]](#References):
 * 6 Mz (changed to 36MHz via CPLD)
 * 25 MHz - only for GRX255
 ### PLL's
-There are 3 PPL's in the board. However they are not exactly identical most probably because they don't feed to the same items.
-* PLL0 seems to be the master
-* PLL1 seems to be the brother
-* PLL2 seems to be the auxilliary or little brother. The register information differs from PLL0 and PLL1. Also it seems it contains a divider in addition to a PLL circuitry.
+There are 3 PPL's in the board. According [[1]](#References) for ARX100:
+> /*
+> * Supported clock modes
+> * PLL0: rational PLL running at 500 MHz
+> * PLL1: fractional PLL running at 393.219 MHz
+> */
+
+_Note: With an upported driver taken from [[4]](#References), tested in a VR9-AVR7519RW22 the freq_out values are:_
+
+||f_out (MHz)|
+|---|---|
+|PLL0|500|
+|PLL1|392.736328|
+
+In the same code, one can also notice that CPU is either fed from PLL0 and PLL1, depending on the desired frequency.
+
+We must assume that the hardware is different per each kind. Most notorious is PLL2. The register information differs from PLL0 and PLL1. Also it seems it contains a divider in addition to a PLL circuitry.
 
 This is the register layout as far as we know. See [[1]](#References) & [[5]](#References):
 |BIT|PLL0|PLL1|PLL2|
 |---|---|---|---|
-|0|ENABLE|ENABLE|DDR_SEL|
-|1|LOCKED|LOCKED|DDR_SEL|
+|0|ENABLE|ENABLE|DDR_SEL?|
+|1|LOCKED|LOCKED|DDR_SEL?|
 |2|CGF_PLLM|CGF_PLLM||
 |3|CGF_PLLM|CGF_PLLM||
 |4|CGF_PLLM|CGF_PLLM||
