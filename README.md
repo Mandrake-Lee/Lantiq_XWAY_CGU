@@ -52,53 +52,60 @@ In the same code, one can also notice that CPU is either fed from PLL0 and PLL1,
 
 We must assume that the hardware is different per each kind. Most notorious is PLL2. The register information differs from PLL0 and PLL1. Also it seems it contains a divider in addition to a PLL circuitry.
 
-This is the register layout as far as we know. Sometimes the sources are contradictory, giving different functions for the same register bit. See [[1], [2], [6]](#References):
-|BIT|PLL0|PLL1|PLL2|
-|---|---|---|---|
-|0|ENABLE|ENABLE|ENABLE|
-|1|LOCKED|LOCKED|LOCKED|
-|2|CGF_PLLM|CGF_PLLM|CGF_PLLM|
-|3|CGF_PLLM|CGF_PLLM|CGF_PLLM|
-|4|CGF_PLLM|CGF_PLLM|CGF_PLLM|
-|5|CGF_PLLM|CGF_PLLM|CGF_PLLM|
-|6|CFG_PLLN|CFG_PLLN|CFG_PLLN|
-|7|CFG_PLLN|CFG_PLLN|CFG_PLLN|
-|8|CFG_PLLN|CFG_PLLN|CFG_PLLN|
-|9|CFG_PLLN|CFG_PLLN|CFG_PLLN|
-|10|CFG_PLLN|CFG_PLLN|CFG_PLLN|
-|11|CFG_PLLN|CFG_PLLN|CFG_PLLN|
-|12|CFG_PLLN|CFG_PLLN|CFG_PLLN|
-|13|CFG_PLLN|CFG_PLLD|CFG_INPUT_DIV or CFG_PLLN?|
-|14||CFG_PLLD|CFG_INPUT_DIV|
-|15||CFG_PLLD|CFG_INPUT_DIV|
-|16||CFG_PLLD|CFG_INPUT_DIV|
-|17||CFG_PLLK_HI|SRC|
-|18||CFG_PLLK_HI|SRC|
-|19||CFG_PLLK_HI||
-|20|PS1_EN|CFG_PLLK_HI|PHASE_DIVIDER or PPL1_K?|
-|21|PS2_EN|CFG_PLLK_HI|PPL1_K?|
-|22|PLL1_FMOD|CFG_PLLK_HI|PPL1_K?|
-|23|PLL1_FMOD|CFG_PLLK_HI|PPL1_K?|
-|24||CFG_PLLK_HI|PPL1_K?|
-|25||CFG_PLLK_HI|PPL1_K?|
-|26||CFG_PLLK_HI|PPL1_K?|
-|27|CFG_FRAC|CFG_FRAC|PPL1_K?|
-|28|CFG_DSMSEL|CFG_DSMSEL|PPL1_K?|
-|29|SRC|CFG_CTEN|PPL1_K?|
-|30|BYPASS|BYPASS|BYPASS|
-|31|PHASE_DIVIDER|SRC or PHASE_DIVIDER?||
+This is the register layout as far as we know. Sometimes the sources are contradictory, giving different functions for the same register bit. However, the *ifxmips_clk.c* (see [here][1], [here][2] or [here][3]) series are quite consistent with the following definition that we must take as true for AR9, AR10 and VR9. The only source that differs is *clk-xway.c*[here][6]
+| BIT | PLL0        | PLL1          | PLL2      |
+|-----|-------------|---------------|-----------|
+| 0   | ENABLE      | ENABLE        | ENABLE    |
+| 1   | LOCKED      | LOCKED        | LOCKED    |
+| 2   | CFG_PLL_M   | CFG_PLL_M     | CFG_PLL_M |
+| 3   | CFG_PLL_M   | CFG_PLL_M     | CFG_PLL_M |
+| 4   | CFG_PLL_M   | CFG_PLL_M     | CFG_PLL_M |
+| 5   | CFG_PLL_M   | CFG_PLL_M     | CFG_PLL_M |
+| 6   | CFG_PLL_N   | CFG_PLL_N     | CFG_PLL_N |
+| 7   | CFG_PLL_N   | CFG_PLL_N     | CFG_PLL_N |
+| 8   | CFG_PLL_N   | CFG_PLL_N     | CFG_PLL_N |
+| 9   | CFG_PLL_N   | CFG_PLL_N     | CFG_PLL_N |
+| 10  | CFG_PLL_N   | CFG_PLL_N     | CFG_PLL_N |
+| 11  | CFG_PLL_N   | CFG_PLL_N     | CFG_PLL_N |
+| 12  | CFG_PLL_N   | CFG_PLL_N     | CFG_PLL_N |
+| 13  | CFG_PLL_N   | CFG_PLL_D     | CFG_PLL_N |
+| 14  |             | CFG_PLL_D     |           |
+| 15  |             | CFG_PLL_D     |           |
+| 16  |             | CFG_PLL_D     |           |
+| 17  |             | CFG_PLL_K     |           |
+| 18  |             | CFG_PLL_K     |           |
+| 19  |             | CFG_PLL_K     |           |
+| 20  | PS1_EN      | CFG_PLL_K     | PLL1_K_LO |
+| 21  | PS2_EN      | CFG_PLL_K     | PLL1_K_LO |
+| 22  | PLL1_FMOD_S | CFG_PLL_K     | PLL1_K_LO |
+| 23  | PLL1_FMOD_S | CFG_PLL_K     | PLL1_K_LO |
+| 24  |             | CFG_PLL_K     | PLL1_K_LO |
+| 25  |             | CFG_PLL_K     | PLL1_K_LO |
+| 26  |             | CFG_PLL_K     | PLL1_K_LO |
+| 27  |             | CFG_FRAC      | PLL1_K_LO |
+| 28  |             | CFG_DSMSEL    | PLL1_K_LO |
+| 29  |             | CFG_CTEN      | PLL1_K_LO |
+| 30  | BYPASS      | BYPASS        | BYPASS    |
+| 31  |             | PHASE_DIVIDER |           |
 
-* BYPASS. If enable, the PLL will output the oscillator/input frequency
+* ENABLE. If PLL is activated.
+* LOCKED. If PLL has reached stability (locked)
+* CFG_PLL_M. Definition of the M value, denominator coefficient
+* CFG_PLL_N. Definition of the N value, numerator integer coefficient
+* CFGP_PLL_K. Definition of the numerator fraction coefficient
+* CFG_PLL_D. Unknown. Maybe a divider
+* CFG_FRAC. If enable, the PLL_K values are defined and used
 * DDR_SEL. It's a divider from PLL0 to DDR/FPI/IO bus
-* SRC:
-  * For PPL0 & PLL1, if enable, freq_in will be the one of the USB bus i.e 12MHz
-  * For PPL2, this property is always active with following choices:
-    * 0 : PPL2_freq_in = PPL0_freq_out affected by PLL2 divider
-    * 1 : PPL2_freq_in depends on the PHASE_DIVIDER; either 36MHz or 35.328MHz
-    * 2 : PPL2_freq_in is the same as USB bus, i.e. 12MHz
+* CFG_DSMSEL. Activates the Delta Sigma Modulator for fractional PLL
+* CFG_CTEN. Unknown.
+* BYPASS. If enable, the PLL will output the oscillator/input frequency
+* PHASE_DIVIDER. If enable, pulls information from PLL0 stored in PLL1_FMOD_S as it is needed for modulo calculations
+* PS1_EN & PS2_EN. Phase Shifter Enable. It is not clear but there're hints in AR9 [code][2] that this can act as a fractional divider of the PLL0 freq_out by ratios x1/2, x2/3 and x5/3.
+* PLL1_FMOD_S. This is a PLL1 value stored in PLL0 (!). This value is needed when PHASE_DIVIDER is activated
+* PLL1_K_LO. Unknown
 
 ## Memory layout
-Based on [4](#References):
+Based on [U-Boot IFX board patches][5]:
 
 ### DANUBE, AMAZON, AR9
 
@@ -144,12 +151,12 @@ Based on [4](#References):
 * IF_CLK.
 * CGU_DDR. DDR control. Divider?
 * CGU_CT1SR. Counter1 status?
-* CGU_CT_KVAL. Couter1 K-value
+* CGU_CT_KVAL. Counter1 K-value
 * CGU_PCMCR. PCM control
 * PCI_CR. PCI control. Valid rates 60M, 83M, 111M, 133M, 167M, 333M (in Hz).
 * GPHY1_CFG
 * GPHY0_CFG
-* PLL2_CFG
+* PLL2_CFG. PLL2 configuration register
 
 ### AR10
 
@@ -162,12 +169,17 @@ Based on [4](#References):
 |0x40|EPHY1_CFG|EPHY2_CFG|EPHY0_CFG||
 
 # References
-1. ###### ifxmips_clk.c [src](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/linux/linux-2.6.32.32/arch/mips/infineon/vr9/ifxmips_clk.c)
+1. [VR9 ifxmips_clk.c][1]
+1. [AR9 ifxmips_clk.c][2]
+1. [AR10 ifxmips_clk.c][3]
+1. [U-Boot sources Daniel Schwierzeck][4] Files *cgu.c, cgu_init.S*
+1. U-Boot UGW6.1 sources. File *vr9.h*
+1. [U-Boot IFX board patches][5]
+1. [clk-xway.c][6] 
 
-1. ###### [U-Boot sources Daniel Schwierzeck](https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200) Files *cgu.c, cgu_init.S*
-
-1. ###### U-Boot UGW6.1 sources. File *vr9.h*
-
-1. ###### [U-Boot IFX board patches](https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/)
-
-1. ###### [clk-xway.c](https://github.com/Cl3Kener/UBER-M/blob/master/arch/mips/lantiq/xway/clk-xway.c) 
+[1]: https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/linux/linux-2.6.32.32/arch/mips/infineon/vr9/ifxmips_clk.c
+[2]: https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/linux/linux-2.6.32.32/arch/mips/infineon/ar9/ifxmips_clk.c
+[3]: https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/linux/linux-2.6.32.32/arch/mips/infineon/ar10/ifxmips_clk.c
+[4]: https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200
+[5]: https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/
+[6]: https://github.com/Cl3Kener/UBER-M/blob/master/arch/mips/lantiq/xway/clk-xway.c
