@@ -168,6 +168,11 @@ Based on [U-Boot IFX board patches][5]:
 |0x30|CGU_CT_KVAL|CGU_PCMCR|||
 |0x40|EPHY1_CFG|EPHY2_CFG|EPHY0_CFG||
 
+# Glossary
+* PPE. It means Packet Processing Engine. It is a separate on-chip CPU for
+network offloading functions which only runs with a propietary
+firmware from Lantiq. On AR9 the PPE clock is fixed to 250 MHz. Taken from [here][7]
+
 # References
 1. [VR9 ifxmips_clk.c][1]
 1. [AR9 ifxmips_clk.c][2]
@@ -183,3 +188,4 @@ Based on [U-Boot IFX board patches][5]:
 [4]: https://github.com/danielschwierzeck/u-boot-lantiq/tree/openwrt/v2013.10/arch/mips/cpu/mips32/vrx200
 [5]: https://github.com/uwehermann/easybox-904-lte-firmware/blob/master/package/infineon-utilities/feeds/ifx_feeds_uboot/open_uboot/patches/
 [6]: https://github.com/Cl3Kener/UBER-M/blob/master/arch/mips/lantiq/xway/clk-xway.c
+[7]: https://openwrt-devel.openwrt.narkive.com/sbyBZdj7/uboot-lantiq-cgu-settings-for-ramboot-image
