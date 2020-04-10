@@ -8,14 +8,27 @@ Lantiq/Intel hasn't released the datasheet for his family of XWAY Soc's, hence e
 The purpose of this repository is to document the findings in the scattered sources available.
 
 ## Applicability
-XWAY family spans for: Danube, Amazon, AR9, VR9/XRX200 GRX300
+XWAY family spans for: AR9, AR10, VR9/XRX200 and GRX300.
 
 ## Physical layout
-This chapter is a huge guess so please take info with care.
+This chapter is a guess based on reverse engineering of the sources. The best hints are [AR9][2].
 
 ### Schematic
-Be aware this is a wip. Many assumptions taken.
-![Schematic draft](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_shematic_draft_20200405.PNG)
+We could differentiate 2 parts of the CGU:
+* Clock generation
+* Clock selection
+
+#### Clock generation
+The clock signals are generated via PLL's. After that they're divided to feed the different systems.
+
+It's worth noting that the PLL's are setup during U-Boot and they're not supposed to be changed afterwards.
+
+![Schematic draft](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_schematic_generation_20200410.PNG)
+
+#### Clock selection
+The speed of each device is done via MUXing the different sources. For instance, below some examples for VR9:
+
+
 
 ### Oscillator
 Analysing [[3]](#References):
