@@ -163,13 +163,13 @@ Based on [U-Boot IFX board patches][5]:
 * PLL1_CFG. PPL1 configuration register
 * CGU_SYS. Most read/write operations are done via this register. The structure is as follows:
  
- |BYTES|5-8|1-4|
+ |BYTES|3-4|1-2|
  |---|---|---|
  |AREA|MASTER|SHADOW|
  |OPERATION|WRITE|READ|
 * CGU_CLKFSR. Frequency selector
  
- |BYTES|7-8|5-6|3-4|1-2|
+ |BYTES|4|3|2|1|
  |---|---|---|---|---|
  |CONTROL|ETH|ETH|PPE|PPE|
  |AREA|MASTER|SHADOW|MASTER|SHADOW|
