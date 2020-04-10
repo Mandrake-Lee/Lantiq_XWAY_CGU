@@ -28,6 +28,13 @@ It's worth noting that the PLL's are setup during U-Boot and they're not suppose
 #### Clock selection
 The speed of each device is done via MUXing the different sources. For instance, below some examples for VR9:
 
+##### VR9
+
+![Schematic VR9 SYS CPU](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_schematic_VR9_sys_cpu_mux_20200410.PNG)
+
+![Schematic VR9 SYS OCP](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_schematic_VR9_sys_ocp_mux_20200410.PNG)
+
+![Schematic VR9 SYS PPE](https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU/blob/master/CGU_schematic_VR9_sys_ppe_mux_20200410.PNG)
 
 
 ### Oscillator
@@ -58,14 +65,25 @@ _Note: With an upported driver taken from [[4]](#References), tested in a VR9-AV
 
 ||f_out (MHz)|
 |---|---|
-|PLL0|500|
-|PLL1|392.736328|
+|PLL0|1000|
+|PLL1|392.934082|
 
-In the same code, one can also notice that CPU is either fed from PLL0 and PLL1, depending on the desired frequency.
+We must assume that the hardware is different per each kind.
+* PLL0 seems to be the main clock. It has 4 outputs, the pure PLL0 output with the highest frequency of the CGU and 3 *Phase Shifters*, which are fixed dividers. According to the sources, the ratios are as follow:
 
-We must assume that the hardware is different per each kind. Most notorious is PLL2. The register information differs from PLL0 and PLL1. Also it seems it contains a divider in addition to a PLL circuitry.
+| output|RATIO (ref. pll0)|
+|----|----|
+|pll0|1|
+|pll0_ps1|1/2|
+|pll0_ps2|2/3|
+|pll0_ps3|3/5|
 
-This is the register layout as far as we know. Sometimes the sources are contradictory, giving different functions for the same register bit. However, the *ifxmips_clk.c* (see [here][1], [here][2] or [here][3]) series are quite consistent with the following definition that we must take as true for AR9, AR10 and VR9. The only source that differs is *clk-xway.c*[here][6]
+* PLL1 is fractional, mainly supporting the GPIO *clkout* set. It also has a programmable divider. As a curiosity, it has some register values (*modulo*) stored in PLL0 register position.
+
+* PLL2 is basically to support PPE unit.
+
+This is the register layout as far as we know. Sometimes the sources are contradictory, giving different functions for the same register bit. However, the *ifxmips_clk.c* (see [here][1], [here][2] or [here][3]) series are quite consistent with the following definition that we must take as true for AR9, AR10 and VR9. The only source that differs is *clk-xway.c*[here][6], maybe because this is defining Danube SoC.
+
 | BIT | PLL0        | PLL1          | PLL2      |
 |-----|-------------|---------------|-----------|
 | 0   | ENABLE      | ENABLE        | ENABLE    |
@@ -108,13 +126,12 @@ This is the register layout as far as we know. Sometimes the sources are contrad
 * CFGP_PLL_K. Definition of the numerator fraction coefficient
 * CFG_PLL_D. Unknown. Maybe a divider
 * CFG_FRAC. If enable, the PLL_K values are defined and used
-* DDR_SEL. It's a divider from PLL0 to DDR/FPI/IO bus
 * CFG_DSMSEL. Activates the Delta Sigma Modulator for fractional PLL
 * CFG_CTEN. Unknown.
 * BYPASS. If enable, the PLL will output the oscillator/input frequency
 * PHASE_DIVIDER. If enable, pulls information from PLL0 stored in PLL1_FMOD_S as it is needed for modulo calculations
-* PS1_EN & PS2_EN. Phase Shifter Enable. It is not clear but there're hints in AR9 [code][2] that this can act as a fractional divider of the PLL0 freq_out by ratios x1/2, x2/3 and x5/3.
-* PLL1_FMOD_S. This is a PLL1 value stored in PLL0 (!). This value is needed when PHASE_DIVIDER is activated
+* PS1_EN & PS2_EN. Phase Shifter Enable. These are fractional divider of the PLL0 freq_out by ratios x1/2, x2/3. PS3 is always activated with ratio x5/3 as we can't find any register related.
+* PLL1_FMOD_S. This is a PLL1 value stored in PLL0 (!). This value is needed when PHASE_DIVIDER is activated.
 * PLL1_K_LO. Unknown
 
 ## Memory layout
